@@ -1,0 +1,33 @@
+version: "3.8"
+
+services:
+  db:
+    image: mysql:8.0
+    container_name: mysql_db
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword   # เปลี่ยนเอง
+      MYSQL_DATABASE: mydb               # db เริ่มต้น
+      MYSQL_USER: myuser                 # user เพิ่ม
+      MYSQL_PASSWORD: mypassword        # password ของ user
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: phpmyadmin
+    restart: always
+    environment:
+      PMA_HOST: db         # ชื่อ service ของ mysql
+      PMA_PORT: 3306
+      PMA_USER: root       # หรือ myuser ก็ได้
+      PMA_PASSWORD: rootpassword
+    ports:
+      - "8080:80"          # เปิด phpMyAdmin ที่ port 8080
+    depends_on:
+      - db
+
+volumes:
+  mysql_data:
